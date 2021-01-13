@@ -1,0 +1,107 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.gzzlit'
+                artifactId = 'ConnectedBase'
+                version = '1.0.0'
+            }
+            debug(MavenPublication) {
+                from components.debug
+                groupId = 'com.gzzlit'
+                artifactId = 'ConnectedBase-debug'
+                version = '1.0.0'
+            }
+        }
+    }
+}
+
+//apply plugin: 'maven'
+//
+////打包main目录下代码和资源的 task
+//task androidSourcesJar(type: Jar) {
+//    archiveClassifier.convention('sources');
+//    archiveClassifier.set('sources');
+//    from android.sourceSets.main.java.srcDirs
+//}
+////配置需要上传到maven仓库的文件
+//artifacts {
+//    archives androidSourcesJar
+//}
+////上传到Maven仓库的task
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            pom.groupId = "com.gzzlit"// 唯一标识（通常为模块包名，也可以任意）
+//            pom.artifactId = "ConnectedBase" // 项目名称（通常为类库模块名称，也可以任意）
+//            pom.version = "1.0.0" // 版本号
+//        }
+//    }
+//}
+
+//apply plugin: 'com.novoda.bintray-release'
+//
+//publish {
+//    userOrg = 'gzzlit' //bintray账户下某个组织id
+//    repoName = 'lib'
+//    groupId = 'com.gzzlit' //maven仓库下库的包名，一般为模块包名
+//    artifactId = 'ConnectedBase' //项目名称
+//    publishVersion = '1.0.0' //版本号
+//    desc = '智磊物联网设备口控制基础库' //项目介绍，可以不写
+//    website = 'https://github.com/gzzlit/ConnectedBase' //项目主页，可以不写
+//    bintrayUser = 'zhileigz'
+//    bintrayKey = '6a513df1ee83266b1d6ae1a57bc2ece465b628ac'
+//    dryRun = false
+//}
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // Anko Commons
+    api "org.jetbrains.anko:anko-commons:$anko_version"
+
+    // Anko Layouts
+    api "org.jetbrains.anko:anko-sdk25:$anko_version" // sdk15, sdk19, sdk21, sdk23 are also available
+    api "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+
+}
